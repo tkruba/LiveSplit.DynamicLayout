@@ -2,9 +2,9 @@ name: Build LiveSplit.DynamicLayout
 
 on:
   push:
-    branches: [ mster ]
+    branches: [ master ]
   pull_request:
-    branches: [ mster ]
+    branches: [ master ]
     
 jobs:
   build:
