@@ -16,7 +16,11 @@ jobs:
     - name: Install Mono
       run: |
         sudo apt-get update
-        sudo apt-get install -y mono-complete
+        sudo apt-get install -y mono-complete msbuild
+        mono --version
+        msbuild -version
+      env:
+        DEBIAN_FRONTEND: noninteractive
 
     - name: Setup NuGet
       uses: nuget/setup-nuget@v2
