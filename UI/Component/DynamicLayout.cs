@@ -106,6 +106,9 @@ namespace LiveSplit.UI.Components
             string splitColor = HexConverter(LiveSplitStateHelper.GetSplitColor(state, state.CurrentTime[state.CurrentTimingMethod] - state.Run[state.CurrentSplitIndex - 1].Comparisons[state.CurrentComparison][state.CurrentTimingMethod],
                         state.CurrentSplitIndex - 1, true, false, state.CurrentComparison, state.CurrentTimingMethod).GetValueOrDefault());
             string delta = DeltaFormatter(LiveSplitStateHelper.GetLastDelta(state, state.CurrentSplitIndex - 1, state.CurrentComparison, state.CurrentTimingMethod).GetValueOrDefault());
+            string bestSegmentTime = state.Run[state.CurrentSplitIndex - 1].BestSegmentTime[state.CurrentTimingMethod] != null
+                ? TimeFormatter(state.Run[state.CurrentSplitIndex - 1].BestSegmentTime[state.CurrentTimingMethod].GetValueOrDefault())
+                : "-";
 
             if (splitColor == "#000000")
             {
@@ -113,10 +116,20 @@ namespace LiveSplit.UI.Components
                 splitColor = HexConverter(state.Layout.Settings.NotRunningColor);
             }
 
+            TimeSpan? currentSegmentTime = state.CurrentTime[state.CurrentTimingMethod];
+            if (state.CurrentSplitIndex > 1)
+            {
+                currentSegmentTime -= state.Run[state.CurrentSplitIndex - 2].SplitTime[state.CurrentTimingMethod];
+            }
+
+            bool isGoldSplit = currentSegmentTime.HasValue && state.Run[state.CurrentSplitIndex - 1].BestSegmentTime[state.CurrentTimingMethod].HasValue
+                && currentSegmentTime.Value <= state.Run[state.CurrentSplitIndex - 1].BestSegmentTime[state.CurrentTimingMethod].Value;
 			return state.Run[state.CurrentSplitIndex - 1].Name
 				+ _sMC + TimeFormatter(state.CurrentTime[state.CurrentTimingMethod].GetValueOrDefault())
 				+ _sMC + delta
-				+ _sMC + splitColor;
+				+ _sMC + splitColor
+                + _sMC + bestSegmentTime
+                + _sMC + isGoldSplit.ToString().ToLower();
         }
 
         public void state_OnSkipSplit(object sender, EventArgs e)
