@@ -36,3 +36,6 @@ jobs:
       with:
         name: DynamicLayout-DLL
         path: bin/Release/LiveSplit.DynamicLayout.dll
+      with:
+        name: DynamicLayout-DLL
+        path: bin/Release/LiveSplit.DynamicLayout.dll
