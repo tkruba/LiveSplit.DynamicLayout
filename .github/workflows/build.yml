@@ -1,0 +1,32 @@
+name: Build LiveSplit.DynamicLayout
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: Restore NuGet Packages
+      run: nuget restore LiveSplit.DynamicLayout.sln
+
+    - name: Build Solution
+      run: msbuild LiveSplit.DynamicLayout.sln -p:Configuration=Release
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: DynamicLayout-DLL
+        path: bin/Release/LiveSplit.DynamicLayout.dll
